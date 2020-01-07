@@ -13,15 +13,14 @@
     :text="value.name"
   />
 </van-grid>
-
-<van-grid :column-num="1" icon-size="700px">
-  <van-grid-item
-    v-for="value in products"
-    :key="value.id"
-    :icon="value.photo"
-    :text="value.name"
-  />
-</van-grid>
+  
+   <briup-product-item 
+   @click="toBuyHandler(p)"
+   v-for="p in products"
+   :key="p.id"
+   :data="p">
+   </briup-product-item>
+  
 <!-- /分类 -->
 
    </div>
@@ -44,6 +43,14 @@ data(){
     this.loadCategories();
   },
   methods:{
+    toBuyHandler(p){
+      alert(JSON.stringify(p));
+      //跳转到订单页面，并且携带数据p
+      this.$router.push({
+        path:"/manager/order_confirm",
+        query:p
+      })
+    },
     loadCategories(){
       let url = "/category/findAll"
       get(url).then((response)=>{
@@ -56,7 +63,7 @@ data(){
       let url = "/product/query"
       let params ={
         page:0,
-        pageSize:10
+        pageSize:100
       }
       post(url,params).then((response)=>{
         this.products= response.data.list;
